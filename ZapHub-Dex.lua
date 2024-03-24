@@ -5194,7 +5194,7 @@ return search]==]
 						ScrollingFrame.ScrollBarImageTransparency = 0.999
 						ScrollingFrame.ZIndex = 9e4
 						ScrollingFrame.CanvasSize = UDim2.new(0, 0, 15, 0)
-						ScrollingFrame.ScrollBarThickness = 16
+						ScrollingFrame.ScrollBarThickness = 40
 						
 						
 						ScrollingFrame:GetPropertyChangedSignal("CanvasPosition"):Connect(function()
