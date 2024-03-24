@@ -4294,6 +4294,7 @@ return search]==]
 						pcall(function()
 							-- thanks King.Kevin#6025 you'll obviously be credited (no discord tag since that can easily be impersonated)
 							local getgc = getgc or get_gc_objects
+							local getreg = getreg or getregistry or debug.getregistry
 							local getupvalues = (debug and debug.getupvalues) or getupvalues or getupvals
 							local getconstants = (debug and debug.getconstants) or getconstants or getconsts
 							local getinfo = (debug and (debug.getinfo or debug.info)) or getinfo
@@ -4364,12 +4365,31 @@ return search]==]
 									end
 								end
 							end
+							
+							local TotalGC = 0
 							for _, _function in ipairs(getgc(true)) do
 								local FenvScript = typeof(_function) == "function" and getfenv(_function).script
 								if FenvScript and FenvScript == PreviousScr then
+									TotalGC = TotalGC + 1
 									functions:dump_function(_function, 0)
 									functions:add_to_dump("\n" .. ("="):rep(100), 0, false)
 								end
+							end
+							
+							if TotalGC == 0 then
+								for _, _function in ipairs(getreg()) do
+									local FenvScript = typeof(_function) == "function" and getfenv(_function).script
+									if FenvScript and FenvScript == PreviousScr then
+										TotalGC = TotalGC + 1
+										functions:dump_function(_function, 0)
+										functions:add_to_dump("\n" .. ("="):rep(100), 0, false)
+									end
+								end
+							end
+							
+							if TotalGC == 0 then
+								codeFrame:SetText("-- Failed to Dump Functions :(")
+								return
 							end
 							local source = codeFrame:GetText() or ""
 							source = source .. dump .. "]]"
