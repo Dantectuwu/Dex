@@ -4,7 +4,7 @@
 	New Dex
 	Final Version
 	Developed by Moon
-	Modified for Infinite Yield and ZapHub
+	Modified for Infinite Yield and ZapHub (1dnt)
 	
 	Dex is a debugging suite designed to help the user debug games and find any potential vulnerabilities.
 	
@@ -671,7 +671,24 @@ local EmbeddedModules = {
 							Explorer.MiscIcons:DisplayByKey(entry.Indent.Icon, isa(obj,"LocalScript") and "LocalScript_Disabled" or "Script_Disabled")
 						else
 							local rmdEntry = RMD.Classes[obj.ClassName]
-							Explorer.ClassIcons:Display(entry.Indent.Icon, rmdEntry and rmdEntry.ExplorerImageIndex or 0)
+							local EndedMod = false
+							local Index = rmdEntry and rmdEntry.ExplorerImageIndex
+							if Index then
+								Index = tonumber(Index)
+								if Index > 49 and Index < 98 then
+									Explorer.ClassIcons:Display(entry.Indent.Icon, Index - 50, 16)
+									EndedMod = true
+								elseif Index > 98 then
+									Explorer.ClassIcons:Display(entry.Indent.Icon, Index - 100, 32)
+									EndedMod = true
+								else
+									Explorer.ClassIcons:Display(entry.Indent.Icon, Index)
+									EndedMod = true
+								end
+							end
+							if not EndedMod then
+								Explorer.ClassIcons:Display(entry.Indent.Icon, 0)
+							end
 						end
 
 						if selection.Map[node] then
@@ -2126,7 +2143,7 @@ return search]==]
 			end
 
 			Explorer.Init = function()
-				Explorer.ClassIcons = Lib.IconMap.newLinear("rbxasset://textures/ClassImages.png",16,16)
+				Explorer.ClassIcons = Lib.IconMap.newLinear("http://www.roblox.com/asset/?id=16852201996",16,16)
 				Explorer.MiscIcons = Main.MiscIcons
 
 				clipboard = {}
@@ -4980,10 +4997,10 @@ return search]==]
 					obj.Size = UDim2.new(0,self.IconSizeX,0,self.IconSizeY)
 				end
 
-				funcs.Display = function(self,obj,index)
+				funcs.Display = function(self,obj,index, Line)
 					obj.Image = self.MapId
 					if not self.NumX then
-						obj.ImageRectOffset = Vector2.new(self.IconSizeX*index, 0)
+						obj.ImageRectOffset = Vector2.new(self.IconSizeX*index, Line or 0)
 					else
 						obj.ImageRectOffset = Vector2.new(self.IconSizeX*(index % self.NumX), self.IconSizeY*math.floor(index / self.NumX))	
 					end
