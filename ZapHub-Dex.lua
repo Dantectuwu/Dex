@@ -4234,8 +4234,10 @@ return search]==]
 			local PreviousScr = nil
 
 			ScriptViewer.ViewScript = function(scr)
+				PreviousScr = scr
+				
 				local success, source = pcall(env.decompile or function() end, scr)
-				if not success or not source then source, PreviousScr = "-- DEX - Source failed to decompile", nil else PreviousScr = scr end
+				if not success or not source then source = "-- DEX - Source failed to decompile" end
 				codeFrame:SetText(source)
 				window:Show()
 			end
@@ -4364,12 +4366,12 @@ return search]==]
 							end
 							for _, _function in ipairs(getgc(true)) do
 								local FenvScript = typeof(_function) == "function" and getfenv(_function).script
-								if FenvScript and typeof(FenvScript) == "Instance" and FenvScript == PreviousScr then
+								if FenvScript and FenvScript == PreviousScr then
 									functions:dump_function(_function, 0)
 									functions:add_to_dump("\n" .. ("="):rep(100), 0, false)
 								end
 							end
-							local source = codeFrame:GetText()
+							local source = codeFrame:GetText() or ""
 							source = source .. dump .. "]]"
 							codeFrame:SetText(source)
 						end)
@@ -5158,7 +5160,7 @@ return search]==]
 						task.spawn(function()
 							while true do
 								local ABS = scrollThumbFrame.AbsoluteSize
-								ScrollingFrame.Size = UDim2.new(0, ABS.X + 32, 0, ABS.Y)
+								ScrollingFrame.Size = UDim2.new(0, ABS.X + 48, 0, ABS.Y)
 
 								local ABP = scrollThumbFrame.AbsolutePosition
 								ScrollingFrame.Position = UDim2.new(1, 0, 0, ABP.Y)
@@ -5326,7 +5328,6 @@ return search]==]
 				mt.__index = funcs
 
 				local function new(hor)
-					print("New", hor)
 					local obj = setmetatable({
 						Index = 0,
 						VisibleSpace = 0,
