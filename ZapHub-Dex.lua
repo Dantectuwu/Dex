@@ -10782,7 +10782,7 @@ Main = (function()
 		-- Fetch version if needed
 		intro.SetProgress("Fetching Roblox Version",0.2)
 		if Main.Elevated then
-			Main.RobloxVersion = ""
+			Main.RobloxVersion = " "
 		end
 
 		-- Fetch external deps
