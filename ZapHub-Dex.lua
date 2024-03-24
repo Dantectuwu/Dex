@@ -4295,7 +4295,7 @@ return search]==]
 							local getupvalues = (debug and debug.getupvalues) or getupvalues or getupvals
 							local getconstants = (debug and debug.getconstants) or getconstants or getconsts
 							local getinfo = (debug and (debug.getinfo or debug.info)) or getinfo
-							local original = ("\n-- // Function Dumper made by King.Kevin\n-- // Script Path: %s\n\n--[["):format(PreviousScr:GetFullName())
+							local original = ("\n-- // Function Dumper made by King.Kevin and fixed by 1dnt\n-- // Script Path: %s\n\n--[["):format(PreviousScr:GetFullName())
 							local dump = original
 							local functions, function_count, data_base = {}, 0, {}
 							function functions:add_to_dump(str, indentation, new_line)
@@ -4362,14 +4362,15 @@ return search]==]
 									end
 								end
 							end
-							for _, _function in pairs(getgc()) do
-								if typeof(_function) == "function" and getfenv(_function).script and getfenv(_function).script == PreviousScr then
+							for _, _function in ipairs(getgc(true)) do
+								local FenvScript = typeof(_function) == "function" and getfenv(_function).script
+								if FenvScript and typeof(FenvScript) == "Instance" and FenvScript == PreviousScr then
 									functions:dump_function(_function, 0)
 									functions:add_to_dump("\n" .. ("="):rep(100), 0, false)
 								end
 							end
 							local source = codeFrame:GetText()
-							if dump ~= original then source = source .. dump .. "]]" end
+							source = source .. dump .. "]]"
 							codeFrame:SetText(source)
 						end)
 					end
@@ -5157,7 +5158,7 @@ return search]==]
 						task.spawn(function()
 							while true do
 								local ABS = scrollThumbFrame.AbsoluteSize
-								ScrollingFrame.Size = UDim2.new(0, ABS.X + 10, 0, ABS.Y)
+								ScrollingFrame.Size = UDim2.new(0, ABS.X + 32, 0, ABS.Y)
 
 								local ABP = scrollThumbFrame.AbsolutePosition
 								ScrollingFrame.Position = UDim2.new(1, 0, 0, ABP.Y)
